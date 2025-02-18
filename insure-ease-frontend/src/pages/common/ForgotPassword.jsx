@@ -26,7 +26,7 @@ const ForgotPassword = () => {
     setError("");
     setLoading(true);
 
-    // Simulate API call delay
+
     setTimeout(() => {
       toast.success("Password reset link sent to your email!");
       setLoading(false);
