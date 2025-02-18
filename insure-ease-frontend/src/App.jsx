@@ -36,7 +36,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import ManageUsers from "./pages/admin/ManageUsers";
 import UserDetails from "./components/admin/UserDetails";
 import ManagePolicies from "./pages/admin/ManagePolicies";
-import PolicyDetailsAdmin from "./components/admin/PolicyDetailsAdmin";
+import PolicyDetailsAdmin from "./components/admin/PolicyDetailsAdmin.jsx";
 import ApproveClaims from "./pages/admin/ApproveClaims";
 import ManageOrders from "./pages/admin/ManageOrders";
 import Analytics from "./pages/admin/Analytics";
