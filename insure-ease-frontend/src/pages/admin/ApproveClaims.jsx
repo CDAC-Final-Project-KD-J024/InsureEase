@@ -11,7 +11,7 @@ const ApproveClaims = () => {
     dispatch(updateClaimStatus({ id, claimStatus: newStatus }));
 
     // Show toast notification
-    toast.success(Claim ${id} marked as ${newStatus}, {
+    toast.success(`Claim ${id} marked as ${newStatus}`, {
       position: "top-right",
       autoClose: 3000,
     });
