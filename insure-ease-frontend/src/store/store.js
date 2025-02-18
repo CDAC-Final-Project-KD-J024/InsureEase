@@ -11,7 +11,7 @@ import orderReducer from '../slices/orderSlice';
 const store = configureStore({
   reducer: {
     auth: authReducer,
-    policies: policyReducer,
+    policy: policyReducer,
     userPolicies: userPolicyReducer,
     claims: claimReducer,
     admin: adminReducer,

@@ -13,7 +13,7 @@ const PolicyDetailsAdmin = () => {
   // Handle policy approval/rejection
   const handleApproval = (newStatus) => {
     dispatch(updatePolicyStatus({ policyId, status: newStatus }));
-    toast.success(Policy ${newStatus});
+    toast.success(`Policy ${newStatus}`);
   };
 
   if (!policy) {
@@ -29,7 +29,7 @@ const PolicyDetailsAdmin = () => {
         <p><strong>Coverage:</strong> {policy.coverage}</p>
         <p><strong>Price:</strong> {policy.price}</p>
         <p><strong>Status:</strong> 
-          <span className={badge ${policy.status === "Approved" ? "bg-success" : "bg-warning"}}>
+          <span className={`badge ${policy.status === "Approved" ? "bg-success" : "bg-warning"}`}>
             {policy.status}
           </span>
         </p>

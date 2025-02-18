@@ -5,7 +5,7 @@ import { fetchPolicies } from "../../slices/policySlice"; // Import action
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { policies } = useSelector((state) => state.policies); // Access Redux store
+  const { policies } = useSelector((state) => state.policy); // Access Redux store
   useEffect(() => {
     if (!policies || policies.length === 0) {
       dispatch(fetchPolicies());

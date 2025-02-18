@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { addPolicy } from "../../redux/slices/policySlice"; // Import the action
+import { addPolicy } from "../../slices/policySlice"; // Import the action
 
 const AddPolicy = () => {
   const navigate = useNavigate();
@@ -55,7 +55,7 @@ const AddPolicy = () => {
             <input
               type="text"
               name="type"
-              className={form-control ${errors.type ? "is-invalid" : ""}}
+              className={`form-control ${errors.type ? "is-invalid" : ""}`}
               value={policyData.type}
               onChange={handleChange}
             />
@@ -67,7 +67,7 @@ const AddPolicy = () => {
             <label className="form-label">Description</label>
             <textarea
               name="description"
-              className={form-control ${errors.description ? "is-invalid" : ""}}
+              className={`form-control ${errors.description ? "is-invalid" : ""}`}
               rows="3"
               value={policyData.description}
               onChange={handleChange}
@@ -81,7 +81,7 @@ const AddPolicy = () => {
             <input
               type="number"
               name="price"
-              className={form-control ${errors.price ? "is-invalid" : ""}}
+              className={`form-control ${errors.price ? "is-invalid" : ""}`}
               value={policyData.price}
               onChange={handleChange}
             />
@@ -94,7 +94,7 @@ const AddPolicy = () => {
             <input
               type="text"
               name="coverage"
-              className={form-control ${errors.coverage ? "is-invalid" : ""}}
+              className={`form-control ${errors.coverage ? "is-invalid" : ""}`}
               value={policyData.coverage}
               onChange={handleChange}
             />

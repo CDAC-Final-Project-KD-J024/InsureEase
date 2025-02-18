@@ -16,7 +16,7 @@ const UserDetails = () => {
   const handleRoleChange = () => {
     const newRole = user.role === "user" ? "admin" : "user";
     dispatch(updateUserRole({ userId: id, role: newRole }));
-    toast.success(User role updated to ${newRole});
+    toast.success(`User role updated to ${newRole}`);
   };
 
   // Handle user deletion
@@ -36,7 +36,7 @@ const UserDetails = () => {
         <p><strong>Email:</strong> {user.email}</p>
         <p>
           <strong>Role:</strong> 
-          <span className={badge ${user.role === "admin" ? "bg-success" : "bg-primary"} ms-2}>
+          <span className={`badge ${user.role === "admin" ? "bg-success" : "bg-primary"} ms-2`}>
             {user.role}
           </span>
         </p>

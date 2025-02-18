@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 const Dashboard = () => {
   const user = useSelector((state) => state.auth.user);
   const policies = useSelector((state) => state.policy.policies);
-  const claims = useSelector((state) => state.claim.claims);
-  const orders = useSelector((state) => state.order.orders);
+  const claims = useSelector((state) => state.claims.claims);
+  const orders = useSelector((state) => state.orders.orders);
 
   // Compute stats
   const totalPolicies = policies.length;

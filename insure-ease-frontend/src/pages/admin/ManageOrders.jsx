@@ -47,7 +47,7 @@ const ManageOrders = () => {
                 <td>${order.total}</td>
                 <td>
                   <select 
-                    className={form-select ${order.status === "Completed" ? "bg-success text-white" : order.status === "Cancelled" ? "bg-danger text-white" : "bg-warning text-dark"}}
+                    className={`form-select ${order.status === "Completed" ? "bg-success text-white" : order.status === "Cancelled" ? "bg-danger text-white" : "bg-warning text-dark"}`}
                     value={order.status}
                     onChange={(e) => handleStatusChange(order.id, e.target.value)}
                   >
@@ -57,7 +57,7 @@ const ManageOrders = () => {
                   </select>
                 </td>
                 <td>
-                  <Link to={/admin/order-details/${order.id}} className="btn btn-info btn-sm me-2">View</Link>
+                  <Link to={`/admin/order-details/${order.id}`} className="btn btn-info btn-sm me-2">View</Link>
                 </td>
               </tr>
             ))}

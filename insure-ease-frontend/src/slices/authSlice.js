@@ -17,7 +17,7 @@ const dummyUser = {
     country: 'Anycountry',
     pincode: '123456',
   },
-  role: 'admin', // 'user' or 'admin'
+  role: 'user', // 'user' or 'admin'
   createdAt: '2025-01-01T00:00:00Z',
   updatedAt: '2025-01-01T00:00:00Z',
   policies: ['101', '102'], // User's purchased policies

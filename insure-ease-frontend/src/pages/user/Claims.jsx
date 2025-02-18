@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Claims = () => {
-  const claims = useSelector((state) => state.claim.claims);
+  const claims = useSelector((state) => state.claims.claims);
   const navigate = useNavigate();
 
   // Mapping policyId to policy name
