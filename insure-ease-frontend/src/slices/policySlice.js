@@ -3,7 +3,7 @@ import CarInsuranceImg from '../assets/images/car.png';
 import LifeInsuranceImg from '../assets/images/life.png';
 import HealthInsuranceImg from '../assets/images/health.png';
 import HouseInsuranceImg from '../assets/images/house.png';
-// Dummy policies data
+
 const dummyPolicies = [
   {
     id: '101',
@@ -68,7 +68,7 @@ const dummyPolicies = [
 ];
 
 const initialState = {
-  policies: dummyPolicies,
+  policies: [],
   loading: false,
   error: null,
 };
@@ -95,14 +95,58 @@ const policySlice = createSlice({
     removePolicy: (state, action) => {
       state.policies = state.policies.filter(policy => policy.id !== action.payload);
     },
+    updatePolicy: (state, action) => {
+      const index = state.policies.findIndex(policy => policy.id === action.payload.id);
+      if (index !== -1) {
+        state.policies[index] = { ...state.policies[index], ...action.payload };
+      }
+    },
+    updatePolicyStatus: (state, action) => {
+      const { policyId, status } = action.payload;
+      const policy = state.policies.find(policy => policy.id === policyId);
+      if (policy) {
+        policy.status = status;
+      }
+    },
+    deletePolicy: (state, action) => {
+      state.policies = state.policies.filter(policy => policy.id !== action.payload);
+    },
+    renewPolicy: (state, action) => {
+      const policy = state.policies.find(p => p.id === action.payload);
+      if (policy) {
+        policy.status = "Active"; 
+      }
+    },
   },
 });
+
+
+export const fetchPolicies = () => (dispatch) => {
+  dispatch(fetchPoliciesRequest()); 
+  setTimeout(() => {
+    try {
+      dispatch(fetchPoliciesSuccess(dummyPolicies)); 
+    } catch (error) {
+      dispatch(fetchPoliciesFailure("Failed to load policies")); 
+      console.log(error);
+    }
+  }, 1000);
+};
+
+
+export const selectPolicyById = (state, policyId) => 
+  state.policy.policies.find(policy => policy.id === policyId);
+
 export const {
   fetchPoliciesRequest,
   fetchPoliciesSuccess,
   fetchPoliciesFailure,
   addPolicy,
   removePolicy,
- } = policySlice.actions;
+  updatePolicy,
+  updatePolicyStatus,
+  deletePolicy,
+  renewPolicy
+} = policySlice.actions;
 
 export default policySlice.reducer;
