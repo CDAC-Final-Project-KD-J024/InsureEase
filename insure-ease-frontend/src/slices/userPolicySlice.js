@@ -1,38 +1,37 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
-// Dummy user policies data
 const dummyUserPolicies = [
   {
-    id: '201',
-    userId: '1',
-    policyId: '101',
-    name: 'Comprehensive Car Insurance',
-    type: 'Car',
+    id: "201",
+    userId: "1",
+    policyId: "101",
+    name: "Comprehensive Car Insurance",
+    type: "Car",
     premium: 500,
-    coverage: 'Full coverage including theft, fire, and accidents',
-    startDate: '2025-01-10',
-    endDate: '2026-01-10',
-    status: 'Active', // Active, Expired, Pending
-    provider: 'ABC Insurance Co.',
-    paymentStatus: 'Paid',
-    createdAt: '2025-01-01T00:00:00Z',
-    updatedAt: '2025-01-01T00:00:00Z',
+    coverage: "Full coverage including theft, fire, and accidents",
+    startDate: "2025-01-10",
+    endDate: "2026-01-10",
+    status: "Active",
+    provider: "ABC Insurance Co.",
+    paymentStatus: "Paid",
+    createdAt: "2025-01-01T00:00:00Z",
+    updatedAt: "2025-01-01T00:00:00Z",
   },
   {
-    id: '202',
-    userId: '1',
-    policyId: '102',
-    name: 'Term Life Insurance',
-    type: 'Life',
+    id: "202",
+    userId: "1",
+    policyId: "102",
+    name: "Term Life Insurance",
+    type: "Life",
     premium: 300,
-    coverage: 'Life coverage up to $500,000',
-    startDate: '2024-12-15',
-    endDate: '2034-12-15',
-    status: 'Active',
-    provider: 'XYZ Life Co.',
-    paymentStatus: 'Paid',
-    createdAt: '2024-12-15T00:00:00Z',
-    updatedAt: '2024-12-15T00:00:00Z',
+    coverage: "Life coverage up to $500,000",
+    startDate: "2024-12-15",
+    endDate: "2034-12-15",
+    status: "Active",
+    provider: "XYZ Life Co.",
+    paymentStatus: "Paid",
+    createdAt: "2024-12-15T00:00:00Z",
+    updatedAt: "2024-12-15T00:00:00Z",
   },
 ];
 
@@ -43,7 +42,7 @@ const initialState = {
 };
 
 const userPolicySlice = createSlice({
-  name: 'userPolicies',
+  name: "userPolicies",
   initialState,
   reducers: {
     fetchUserPoliciesRequest: (state) => {
@@ -61,17 +60,49 @@ const userPolicySlice = createSlice({
     addUserPolicy: (state, action) => {
       state.userPolicies.push(action.payload);
     },
-   
+    removeUserPolicy: (state, action) => {
+      state.userPolicies = state.userPolicies.filter(
+        (policy) => policy.id !== action.payload
+      );
+    },
+    updateUserPolicy: (state, action) => {
+      state.userPolicies = state.userPolicies.map((policy) =>
+        policy.id === action.payload.id
+          ? { ...policy, ...action.payload }
+          : policy
+      );
+    },
+    renewUserPolicy: (state, action) => {
+      state.userPolicies = state.userPolicies.map((policy) =>
+        policy.id === action.payload
+          ? {
+              ...policy,
+              status: "Active",
+              startDate: new Date().toISOString().split("T")[0],
+              endDate: new Date(
+                new Date().setFullYear(new Date().getFullYear() + 1)
+              )
+                .toISOString()
+                .split("T")[0],
+              updatedAt: new Date().toISOString(),
+            }
+          : policy
+      );
+    },
   },
 });
 
+export const selectPolicyById = (state, policyId) =>
+  state.userPolicies.userPolicies.find((policy) => policy.id === policyId);
 
 export const {
   fetchUserPoliciesRequest,
   fetchUserPoliciesSuccess,
   fetchUserPoliciesFailure,
   addUserPolicy,
-
+  removeUserPolicy,
+  updateUserPolicy,
+  renewUserPolicy,
 } = userPolicySlice.actions;
 
 export default userPolicySlice.reducer;
