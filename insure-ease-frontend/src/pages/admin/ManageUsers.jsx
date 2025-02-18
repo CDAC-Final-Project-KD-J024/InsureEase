@@ -19,10 +19,10 @@ const ManageUsers = () => {
   const handleRoleChange = (user) => {
     if (user.role === "User") {
       dispatch(promoteUser(user.id));
-      toast.success(${user.name} is now an Admin);
+      toast.success(`${user.name} is now an Admin`);
     } else {
       dispatch(demoteUser(user.id));
-      toast.info(${user.name} is now a User);
+      toast.info(`${user.name} is now a User`);
     }
   };
 
@@ -65,17 +65,17 @@ const ManageUsers = () => {
                 <td>{user.name}</td>
                 <td>{user.email}</td>
                 <td>
-                  <span className={badge ${user.role === "Admin" ? "bg-success" : "bg-primary"}}>
+                  <span className={`badge ${user.role === "Admin" ? "bg-success" : "bg-primary"}`}>
                     {user.role}
                   </span>
                 </td>
                 <td>{user.joinDate}</td>
                 <td>
-                  <Link to={/admin/user/${user.id}} className="btn btn-info btn-sm me-2">
+                  <Link to={`/admin/user/${user.id}`} className="btn btn-info btn-sm me-2">
                     View
                   </Link>
                   <button
-                    className={btn ${user.role === "User" ? "btn-warning" : "btn-secondary"} btn-sm me-2}
+                    className={`btn ${user.role === "User" ? "btn-warning" : "btn-secondary"} btn-sm me-2`}
                     onClick={() => handleRoleChange(user)}
                   >
                     {user.role === "User" ? "Promote to Admin" : "Demote to User"}

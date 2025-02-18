@@ -61,14 +61,14 @@ const ManagePolicies = () => {
                   <td>{policy.id}</td>
                   <td>{policy.type}</td>
                   <td>
-                    <span className={badge ${policy.status === "Active" ? "bg-success" : "bg-danger"}}>
+                    <span className={`badge ${policy.status === "Active" ? "bg-success" : "bg-danger"}`}>
                       {policy.status}
                     </span>
                   </td>
                   <td>{policy.price}</td>
                   <td>{policy.date}</td>
                   <td>
-                    <Link to={/admin/edit-policy/${policy.id}} className="btn btn-warning btn-sm me-2">Edit</Link>
+                    <Link to={`/admin/edit-policy/${policy.id}`} className="btn btn-warning btn-sm me-2">Edit</Link>
                     <button className="btn btn-danger btn-sm" onClick={() => handleDelete(policy.id)}>Delete</button>
                   </td>
                 </tr>

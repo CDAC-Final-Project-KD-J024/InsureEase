@@ -68,7 +68,7 @@ const dummyPolicies = [
 ];
 
 const initialState = {
-  policies: [],
+  policies: dummyPolicies,
   loading: false,
   error: null,
 };

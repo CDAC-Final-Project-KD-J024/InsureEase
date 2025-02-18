@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { updatePolicy } from "../../redux/slices/policySlice"; // Import update action
-import { selectPolicyById } from "../../redux/slices/policySlice"; // Import selector
+import { updatePolicy } from "../../slices/policySlice"; // Import update action
+import { selectPolicyById } from "../../slices/policySlice"; // Import selector
 
 const EditPolicy = () => {
   const { id } = useParams(); // Get policy ID from URL
@@ -75,7 +75,7 @@ const EditPolicy = () => {
             <input
               type="text"
               name="type"
-              className={form-control ${errors.type ? "is-invalid" : ""}}
+              className={`form-control ${errors.type ? "is-invalid" : ""}`}
               value={policyData.type}
               onChange={handleChange}
             />
@@ -87,7 +87,7 @@ const EditPolicy = () => {
             <label className="form-label">Description</label>
             <textarea
               name="description"
-              className={form-control ${errors.description ? "is-invalid" : ""}}
+              className={`form-control ${errors.description ? "is-invalid" : ""}`}
               rows="3"
               value={policyData.description}
               onChange={handleChange}
@@ -101,7 +101,7 @@ const EditPolicy = () => {
             <input
               type="number"
               name="price"
-              className={form-control ${errors.price ? "is-invalid" : ""}}
+              className={`form-control ${errors.price ? "is-invalid" : ""}`}
               value={policyData.price}
               onChange={handleChange}
             />
@@ -114,7 +114,7 @@ const EditPolicy = () => {
             <input
               type="text"
               name="coverage"
-              className={form-control ${errors.coverage ? "is-invalid" : ""}}
+              className={`form-control ${errors.coverage ? "is-invalid" : ""}`}
               value={policyData.coverage}
               onChange={handleChange}
             />

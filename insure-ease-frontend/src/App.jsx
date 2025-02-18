@@ -23,7 +23,7 @@ import HealthInsuranceCalculator from "./pages/common/HealthInsuranceCalculator"
 import HomeInsuranceCalculator from "./pages/common/HomeInsuranceCalculator";
 
 // User Pages (Protected)
-import ProtectedRoute from "./components/common/ProtectedRoutes";
+import ProtectedRoute from "./components/common/ProtectedRoute";
 import Profile from "./pages/user/Profile";
 import MyPolicies from "./pages/user/MyPolicies";
 import Orders from "./pages/user/Orders";

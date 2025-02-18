@@ -46,7 +46,7 @@ const ApproveClaims = () => {
                 <td>${claim.claimAmount}</td>
                 <td>{claim.filedDate}</td>
                 <td>
-                  <span className={badge ${claim.claimStatus === "Approved" ? "bg-success" : claim.claimStatus === "Rejected" ? "bg-danger" : "bg-warning text-dark"}}>
+                  <span className={`badge ${claim.claimStatus === "Approved" ? "bg-success" : claim.claimStatus === "Rejected" ? "bg-danger" : "bg-warning text-dark"}`}>
                     {claim.claimStatus}
                   </span>
                 </td>

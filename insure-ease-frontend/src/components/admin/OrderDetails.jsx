@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { updateOrderStatus, selectOrderById } from "../../slices/orderSlice";
-
+import { toast } from "react-toastify";
 const OrderDetails = () => {
   const { orderId } = useParams();
   const dispatch = useDispatch();
@@ -12,7 +12,7 @@ const OrderDetails = () => {
   // Update order status
   const handleStatusChange = (newStatus) => {
     dispatch(updateOrderStatus({ orderId, status: newStatus }));
-    alert(Order status updated to ${newStatus});
+    toast.notify(`Order status updated to ${newStatus}`);
   };
 
   if (!order) {
@@ -40,7 +40,7 @@ const OrderDetails = () => {
 
         <label><strong>Status:</strong></label>
         <select 
-          className={form-select mb-3 ${order.status === "Completed" ? "bg-success text-white" : order.status === "Cancelled" ? "bg-danger text-white" : "bg-warning text-dark"}}
+          className={`form-select mb-3 ${order.status === "Completed" ? "bg-success text-white" : order.status === "Cancelled" ? "bg-danger text-white" : "bg-warning text-dark"}`}
           value={order.status}
           onChange={(e) => handleStatusChange(e.target.value)}
         >
