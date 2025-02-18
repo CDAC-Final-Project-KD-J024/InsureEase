@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
-import { useSelector } from "react-redux"; 
-// Import Redux state selector
+import { useSelector } from "react-redux"; // Import Redux state selector
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Common pages
 import Navbar from "./components/common/Navbar";
@@ -36,11 +37,14 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import ManageUsers from "./pages/admin/ManageUsers";
 import UserDetails from "./components/admin/UserDetails";
 import ManagePolicies from "./pages/admin/ManagePolicies";
-import PolicyDetailsAdmin from "./components/admin/PolicyDetailsAdmin.jsx";
+import PolicyDetailsAdmin from "./components/admin/PolicyDetailsAdmin";
 import ApproveClaims from "./pages/admin/ApproveClaims";
 import ManageOrders from "./pages/admin/ManageOrders";
 import Analytics from "./pages/admin/Analytics";
 import OrderDetails from "./components/admin/OrderDetails";
+import AddPolicy from "./components/admin/AddPolicy";
+import EditPolicy from "./components/admin/EditPolicy";
+import ClaimDetails from "./pages/user/ClaimDetails";
 
 const App = () => {
   // Get authentication & role from Redux state
@@ -49,6 +53,7 @@ const App = () => {
   return (
     <div className="container">
       <Navbar />
+      <ToastContainer position="top-right" autoClose={3000} />
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
@@ -77,6 +82,8 @@ const App = () => {
           <Route path="/claims" element={<Claims />} />
           <Route path="/policy/:id" element={<PolicyDetails />} />
           <Route path="/claim-status" element={<ClaimStatus />} />
+          <Route path="/claims/:id" element={<ClaimDetails />} />
+
         </Route>
 
         {/* Admin Protected Routes */}
@@ -98,6 +105,8 @@ const App = () => {
           <Route path="/admin/orders" element={<ManageOrders />} />
           <Route path="/admin/order-details/:id" element={<OrderDetails />} />
           <Route path="/admin/analytics" element={<Analytics />} />
+          <Route path="/admin/policy/add" element={<AddPolicy/>}/>
+          <Route path="/admin/policy/edit/:id" element={<EditPolicy/>}/>
           
         </Route>
       </Routes>
