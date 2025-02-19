@@ -1,21 +1,50 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import {  useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaGoogle, FaGithub } from "react-icons/fa";
-import "react-toastify/dist/ReactToastify.css";
+import { handleLogin } from "../../slices/authSlice";
+import handleOAuthCallback from './../../utils/oauthHandler';
+import { useDispatch } from "react-redux";
+
 
 const Login = () => {
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
+  const dispatch=useDispatch();
+ 
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    const user = JSON.parse(urlParams.get('user') || '{}');
+  
+    if (token && user) {
+      handleOAuthCallback(token, user);
+      navigate('/');
+    }
+  }, [navigate]);
+  
+
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:5000/api/auth/google";
+  };
+
+  const handleGithubLogin = () => {
+    window.location.href = "http://localhost:5000/api/auth/github";
+  };
 
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    
     const trimmedEmail = email.trim();
     const trimmedPassword = password.trim();
-
+    console.log(email+trimmedEmail);
+    console.log(password+trimmedPassword);
     if (!trimmedEmail || !trimmedPassword) {
       toast.error("All fields are required!");
       return;
@@ -28,9 +57,14 @@ const Login = () => {
       toast.error("Password must be at least 6 characters!");
       return;
     }
-
+    const formData = {
+      email:trimmedEmail,
+      password:trimmedPassword
+    }
+    console.log(formData);
     // Proceed with login logic (API call, etc.)
-    toast.success("Login successful!");
+    dispatch(handleLogin(formData));
+    navigate("/");
   };
 
   return (
@@ -68,10 +102,10 @@ const Login = () => {
           </div>
           <hr />
           <div className="d-flex flex-column gap-2">
-            <button type="button" className="btn btn-danger w-100 d-flex align-items-center justify-content-center rounded-pill fw-bold">
+            <button onClick={handleGoogleLogin} type="button" className="btn btn-danger w-100 d-flex align-items-center justify-content-center rounded-pill fw-bold">
               <FaGoogle className="me-2" /> Login with Google
             </button>
-            <button type="button" className="btn btn-dark w-100 d-flex align-items-center justify-content-center rounded-pill fw-bold">
+            <button onClick={handleGithubLogin} type="button" className="btn btn-dark w-100 d-flex align-items-center justify-content-center rounded-pill fw-bold">
               <FaGithub className="me-2" /> Login with GitHub
             </button>
           </div>

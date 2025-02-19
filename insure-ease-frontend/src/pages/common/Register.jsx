@@ -1,9 +1,13 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ProfileImg from '../../assets/images/profile.avif';
+import { useDispatch } from 'react-redux';
+import { handleRegister } from "../../slices/authSlice";
 
 const Register = () => {
+  const dispatch=useDispatch();
+  const navigate=useNavigate();
   const [formData, setFormData] = useState({
     profilePicture: "",
     firstName: "",
@@ -23,9 +27,22 @@ const Register = () => {
 
   const [imagePreview, setImagePreview] = useState(ProfileImg);
 
+  // Email Validation
+// Ensures a valid email format with an "@" symbol and a domain.
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  // Phone Number Validation
+// Ensures the phone number contains only digits and is between 10 to 15 characters long.
   const validatePhone = (phone) => /^\d{10,15}$/.test(phone);
+
+// Pincode Validation
+// Ensures the pincode contains only digits and is between 5 to 10 characters long.
   const validatePincode = (pincode) => /^\d{5,10}$/.test(pincode);
+// Password Validation
+// Ensures the password:
+// - Has at least one uppercase letter
+// - Has at least one digit
+// - Has at least one special character (@$!%*?&)
+// - Is at least 6 characters long
   const validatePassword = (password) =>
     /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/.test(password);
 
@@ -52,7 +69,8 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { firstName, lastName, email, password, confirmPassword, phone, dob, gender, address, city, state, country, pincode } = formData;
+    const {profilePicture, firstName, lastName, email, password, confirmPassword, phone, dob, gender, address, city, state, country, pincode } = formData;
+    
 
     if (!firstName || !lastName || !email || !password || !confirmPassword || !dob || !gender || !phone || !address || !city || !state || !country || !pincode) {
       toast.error("All fields are required!");
@@ -78,8 +96,24 @@ const Register = () => {
       toast.error("Invalid pincode! Must be 5-10 digits.");
       return;
     }
-
-    toast.success("Registration successful!");
+    
+    const form=new FormData();
+    form.append("profilePicture",profilePicture);
+    
+    form.append("firstName",firstName);
+    form.append("lastName",lastName);
+    form.append("email",email);
+    form.append("password",password);
+    form.append("dob",dob);
+    form.append("gender",gender);
+    form.append("phone",phone);
+    form.append("address",address);
+    form.append("city",city);
+    form.append("state",state);
+    form.append("country",country);
+    form.append("pincode",pincode);
+    dispatch(handleRegister(form));
+    navigate("/");
   };
 
   return (
@@ -121,13 +155,16 @@ const Register = () => {
           <input type="tel" className="form-control mb-2" name="phone" value={formData.phone} onChange={handleChange} placeholder="Phone Number" />
           <textarea className="form-control mb-2" name="address" value={formData.address} onChange={handleChange} placeholder="Address" rows="2"></textarea>
           <div className="row">
-            <div className="col-md-4 mb-2">
+            <div className="col-md-3 mb-2">
               <input type="text" className="form-control" name="city" value={formData.city} onChange={handleChange} placeholder="City" />
             </div>
-            <div className="col-md-4 mb-2">
+            <div className="col-md-3 mb-2">
               <input type="text" className="form-control" name="state" value={formData.state} onChange={handleChange} placeholder="State" />
             </div>
-            <div className="col-md-4 mb-2">
+            <div className="col-md-3 mb-2">
+              <input type="text" className="form-control" name="country" value={formData.country} onChange={handleChange} placeholder="Country" />
+            </div>
+            <div className="col-md-3 mb-2">
               <input type="text" className="form-control" name="pincode" value={formData.pincode} onChange={handleChange} placeholder="Pincode" />
             </div>
           </div>

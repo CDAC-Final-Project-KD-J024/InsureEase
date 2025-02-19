@@ -1,28 +1,28 @@
 import { useParams, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUserById, updateUserRole, deleteUser } from "../../slices/adminSlice";
+import { handleDeleteUser, handleUpdateUserRole } from "../../slices/adminSlice";
 import { toast } from "react-toastify";
 
 const UserDetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
 
-  // Fetch user from Redux store
-  const user = useSelector((state) => selectUserById(state, id));
+  // Select user from Redux store
+  const user = useSelector((state) => state.admin.users.find((u) => u.id === id));
 
   if (!user) return <p className="text-center mt-5">User not found.</p>;
 
   // Handle role change
   const handleRoleChange = () => {
     const newRole = user.role === "user" ? "admin" : "user";
-    dispatch(updateUserRole({ userId: id, role: newRole }));
+    dispatch(handleUpdateUserRole(id, newRole));
     toast.success(`User role updated to ${newRole}`);
   };
 
   // Handle user deletion
-  const handleDeleteUser = () => {
+  const handleDeleteUserAction = () => {
     if (window.confirm("Are you sure you want to delete this user?")) {
-      dispatch(deleteUser(id));
+      dispatch(handleDeleteUser(id));
       toast.success("User deleted successfully");
     }
   };
@@ -47,7 +47,7 @@ const UserDetails = () => {
           <button className="btn btn-warning me-2" onClick={handleRoleChange}>
             {user.role === "user" ? "Promote to Admin" : "Demote to User"}
           </button>
-          <button className="btn btn-danger me-2" onClick={handleDeleteUser}>Delete User</button>
+          <button className="btn btn-danger me-2" onClick={handleDeleteUserAction}>Delete User</button>
           <Link to="/admin/users" className="btn btn-outline-primary">Back to Users</Link>
         </div>
       </div>

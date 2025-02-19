@@ -1,8 +1,8 @@
 import { useSelector, useDispatch } from "react-redux";
-import { promoteUser, demoteUser, deleteUser } from "../../slices/adminSlice";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { handleDeleteUser, handleDemoteUser, handlePromoteUser } from "../../slices/adminSlice";
 
 const ManageUsers = () => {
   const dispatch = useDispatch();
@@ -18,17 +18,17 @@ const ManageUsers = () => {
   
   const handleRoleChange = (user) => {
     if (user.role === "User") {
-      dispatch(promoteUser(user.id));
+      dispatch(handlePromoteUser(user.id));
       toast.success(`${user.name} is now an Admin`);
     } else {
-      dispatch(demoteUser(user.id));
+      dispatch(handleDemoteUser(user.id));
       toast.info(`${user.name} is now a User`);
     }
   };
 
   
   const handleDelete = (id) => {
-    dispatch(deleteUser(id));
+    dispatch(handleDeleteUser(id));
     toast.error(`User ID ${id} has been deleted`);
   };
 
