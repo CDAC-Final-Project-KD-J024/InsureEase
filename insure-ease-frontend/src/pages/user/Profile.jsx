@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { updateUserProfile } from "../../slices/authSlice";
+import { updateUserProfileSuccess } from "../../slices/authSlice";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -33,7 +33,7 @@ const Profile = () => {
       return;
     }
 
-    dispatch(updateUserProfile(formData));
+    dispatch(updateUserProfileSuccess(formData));
     toast.success("Profile updated successfully!");
     setEditing(false);
   };

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { handleForgotPassword } from "../../slices/authSlice";
+import { useDispatch } from "react-redux";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -10,6 +12,7 @@ const ForgotPassword = () => {
   const navigate = useNavigate();
 
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -30,6 +33,8 @@ const ForgotPassword = () => {
     setTimeout(() => {
       toast.success("Password reset link sent to your email!");
       setLoading(false);
+      dispatch(handleForgotPassword(email));
+ 
       navigate("/reset-password");
     }, 2000);
   };
@@ -74,5 +79,6 @@ const ForgotPassword = () => {
     </div>
   );
 };
+
 
 export default ForgotPassword;

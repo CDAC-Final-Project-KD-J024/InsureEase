@@ -1,5 +1,7 @@
 // slices/adminSlice.js
 import { createSlice } from "@reduxjs/toolkit";
+import { deleteUserApi, demoteUserApi, promoteUserApi, updateUserRoleApi } from "../api/adminService";
+import { toast } from "react-toastify";
 
 // Dummy users data
 const dummyUsers = [
@@ -86,38 +88,42 @@ const adminSlice = createSlice({
       state.error = action.payload;
     },
     approveClaim: (state, action) => {
-      const index = state.claims.findIndex(
-        (claim) => claim.id === action.payload
-      );
+      const index = state.claims.findIndex((claim) => claim.id === action.payload);
       if (index !== -1) state.claims[index].claimStatus = "Approved";
     },
     rejectClaim: (state, action) => {
-      const index = state.claims.findIndex(
-        (claim) => claim.id === action.payload
-      );
+      const index = state.claims.findIndex((claim) => claim.id === action.payload);
       if (index !== -1) state.claims[index].claimStatus = "Rejected";
     },
-    deleteUser: (state, action) => {
+    selectUserById: (state, action) => {
+      state.selectedUser = state.users.find((user) => user.id === action.payload) || null;
+    },
+    deleteUserSuccess: (state, action) => {
       state.users = state.users.filter((user) => user.id !== action.payload);
     },
-    selectUserById: (state, userId) =>
-      state.admin.users.find((user) => user.id === userId),
-  },
-  updateUserRole: (state, action) => {
-    const { userId, role } = action.payload;
-    const user = state.users.find((user) => user.id === userId);
-    if (user) user.role = role;
-  },
-  promoteUser: (state, action) => {
-    state.users = state.users.map((user) =>
-      user.id === action.payload ? { ...user, role: "Admin" } : user
-    );
-  },
-
-  demoteUser: (state, action) => {
-    state.users = state.users.map((user) =>
-      user.id === action.payload ? { ...user, role: "User" } : user
-    );
+    updateUserRoleSuccess: (state, action) => {
+      const { userId, role } = action.payload;
+      const user = state.users.find((user) => user.id === userId);
+      if (user) {
+        user.role = role;
+      }
+    },
+    promoteUserSuccess: (state, action) => {
+      const { userId } = action.payload;
+      const user = state.users.find((user) => user.id === userId);
+      if (user) {
+        user.role = "admin";
+        user.updatedAt = new Date().toISOString();
+      }
+    },
+    demoteUserSuccess: (state, action) => {
+      const { userId } = action.payload;
+      const user = state.users.find((user) => user.id === userId);
+      if (user) {
+        user.role = "user";
+        user.updatedAt = new Date().toISOString();
+      }
+    }
   },
 });
 
@@ -127,10 +133,68 @@ export const {
   fetchAdminDataFailure,
   approveClaim,
   rejectClaim,
-  deleteUser,
+  deleteUserSuccess,
   selectUserById,
-  updateUserRole,
-  promoteUser,
-  demoteUser,
+  updateUserRoleSuccess,
+  promoteUserSuccess,
+  demoteUserSuccess,
+  
 } = adminSlice.actions;
+
+
 export default adminSlice.reducer;
+// 🟢 Thunk for Promoting User
+export const handlePromoteUser = (userId) => async (dispatch) => {
+  try {
+    await promoteUserApi(userId);
+    dispatch(promoteUserSuccess({ userId })); // Pass userId to reducer
+    toast.success("User promoted to admin successfully!");
+  } catch (error) {
+    toast.error(error.message);
+  }
+};
+
+// 🟢 Thunk for Demoting User
+export const handleDemoteUser = (userId) => async (dispatch) => {
+  try {
+    await demoteUserApi(userId);
+    dispatch(demoteUserSuccess({ userId })); // Pass userId to reducer
+    toast.success("User demoted to standard user successfully!");
+  } catch (error) {
+    toast.error(error.message);
+  }
+};
+
+// 🟢 Thunk for Deleting User
+export const handleDeleteUser = (userId) => async (dispatch) => {
+  try {
+    await deleteUserApi(userId);
+    dispatch(deleteUserSuccess(userId));
+    toast.success("User deleted successfully!");
+  } catch (error) {
+    toast.error(error.message);
+  }
+};
+
+// 🟢 Thunk for Fetching User by ID
+export const handleGetUserById = (userId) => async (dispatch) => {
+  try {
+    // const user = await getUserByIdApi(userId);
+    dispatch(selectUserById(userId)); // Pass userId, not full user object
+  } catch (error) {
+    toast.error(error.message);
+  }
+};
+
+// 🟢 Thunk for Updating User Role
+export const handleUpdateUserRole = (userId, role) => async (dispatch) => {
+  try {
+    await updateUserRoleApi(userId, role);
+    dispatch(updateUserRoleSuccess({ userId, role })); // Pass userId & role
+    toast.success(`User role updated to ${role} successfully!`);
+  } catch (error) {
+    toast.error(error.message);
+  }
+};
+
+
