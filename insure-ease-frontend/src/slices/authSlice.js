@@ -2,7 +2,7 @@
 // 📂 src/redux/authSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import { registerUser, loginUser, updateUserProfileApi, resetPassword, forgotPassword } from '../api/authService';
+import { registerUser, loginUser, updateUserProfileApi, forgotPassword, resetPassword, getUserByToken } from '../api/authService';
 
 const initialState = {
   user: null,
@@ -39,6 +39,7 @@ const authSlice = createSlice({
       state.user = null;
       state.isAuthenticated = false;
       localStorage.removeItem('token');
+      toast.success("Logged out successfully.");
     },
     registerRequest: (state) => {
       state.loading = true;
@@ -82,8 +83,7 @@ const authSlice = createSlice({
         },
         forgotPasswordSuccess: (state) => {
           state.loading = false;
-          state.otpSent = true;
-          toast.success("OTP sent successfully!");
+          state.emailSent = true;
         },
         forgotPasswordFailure: (state, action) => {
           state.loading = false;
@@ -135,7 +135,7 @@ export const handleRegister = (formData) => async (dispatch) => {
   try {
     const data = await registerUser(formData);
     dispatch(registerSuccess(data));
-    toast.success('Registration successful!');
+    toast.success(data.message);
   } catch (error) {
     dispatch(registerFailure(error));
     toast.error(error);
@@ -177,7 +177,6 @@ export const handleThirdPartyLogin = (token, user) => async (dispatch) => {
     toast.error(error.message);
   }
 };
-// 🟢 Forgot Password Thunk
 export const handleForgotPassword = (email) => async (dispatch) => {
   dispatch(forgotPasswordRequest());
   try {
@@ -187,16 +186,28 @@ export const handleForgotPassword = (email) => async (dispatch) => {
     dispatch(forgotPasswordFailure(error));
   }
 };
-
-// 🟢 Reset Password Thunk
-export const handleResetPassword = (email, otp, newPassword) => async (dispatch) => {
+export const handleResetPassword = (token, newPassword) => async (dispatch) => {
   dispatch(resetPasswordRequest());
   try {
-    await resetPassword(email, otp, newPassword);
+    await resetPassword(token, newPassword);
     dispatch(resetPasswordSuccess());
   } catch (error) {
     dispatch(resetPasswordFailure(error));
   }
 };
+
+
+export const checkAuth = () => async (dispatch) => {
+
+    if(!localStorage.getItem("token"))
+    {
+      return;
+    }
+    const {user,token} = await getUserByToken(); 
+    if (user) {
+      dispatch(loginSuccess({ token, user }));
+  }
+};
+
 
 export default authSlice.reducer;

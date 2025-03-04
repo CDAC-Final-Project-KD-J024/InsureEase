@@ -76,6 +76,9 @@ const Navbar = () => {
                   <Link className="nav-link text-white" to="/my-policies">My Policies</Link>
                 </li>
                 <li className="nav-item">
+                  <Link className="nav-link text-white" to="/profile">My Profile</Link>
+                </li>
+                <li className="nav-item">
                   <Link className="nav-link text-white" to="/claims">Claims</Link>
                 </li>
                 <li className="nav-item">
