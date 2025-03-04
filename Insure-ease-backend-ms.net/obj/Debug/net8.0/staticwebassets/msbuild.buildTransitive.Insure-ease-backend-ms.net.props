@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\Insure-ease-backend-ms.net.props" />
+</Project>

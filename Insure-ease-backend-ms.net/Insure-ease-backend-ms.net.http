@@ -1,0 +1,6 @@
+@Insure_ease_backend_ms.net_HostAddress = http://localhost:5020
+
+GET {{Insure_ease_backend_ms.net_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
