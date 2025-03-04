@@ -48,7 +48,7 @@ const Register = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value.trim() });
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleImageChange = (e) => {
@@ -107,7 +107,7 @@ const Register = () => {
     form.append("dob",dob);
     form.append("gender",gender);
     form.append("phone",phone);
-    form.append("address",address);
+    form.append("address",address.trim());
     form.append("city",city);
     form.append("state",state);
     form.append("country",country);
@@ -120,11 +120,11 @@ const Register = () => {
     <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "90vh", paddingTop: "15px" }}>
       <div className="card p-3 shadow-lg" style={{ maxWidth: "600px", width: "100%" }}>
         <div className="text-center mb-2">
-          <label htmlFor="profilePicture" className="d-block position-relative">
+          <label htmlFor="profilePicture" className="d-block position-relative" style={{pointer:"cursor"}}>
             <input type="file" id="profilePicture" accept="image/*" onChange={handleImageChange} style={{ display: "none" }} />
             <img src={imagePreview} alt="Profile" className="rounded-circle border" style={{ width: "100px", height: "100px", objectFit: "cover", cursor: "pointer" }} />
+          <small className="text-muted d-block" style={{cursor:"pointer"}}>Click to upload</small>
           </label>
-          <small className="text-muted d-block">Click to upload</small>
         </div>
         <h2 className="text-center text-primary fw-bold">Register</h2>
         <form onSubmit={handleSubmit}>
@@ -153,7 +153,7 @@ const Register = () => {
             <option value="Other">Other</option>
           </select>
           <input type="tel" className="form-control mb-2" name="phone" value={formData.phone} onChange={handleChange} placeholder="Phone Number" />
-          <textarea className="form-control mb-2" name="address" value={formData.address} onChange={handleChange} placeholder="Address" rows="2"></textarea>
+          <textarea className="form-control mb-2" name="address" value={formData.address} onChange={handleChange} placeholder="Address" rows="2" />
           <div className="row">
             <div className="col-md-3 mb-2">
               <input type="text" className="form-control" name="city" value={formData.city} onChange={handleChange} placeholder="City" />

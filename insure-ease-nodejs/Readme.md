@@ -1,176 +1,170 @@
 insure-ease-nodejs/
-│── src/
-│   ├── config/          # Configuration files (DB, environment, etc.)
-│   │   ├── db.js        # MySQL database connection setup
-│   │   ├── env.js       # Load environment variables
-│   ├── controllers/     # Handles business logic (user authentication, etc.)
-│   │   ├── auth.controller.js
-│   ├── middlewares/     # Middleware (authentication, validation)
-│   │   ├── auth.middleware.js
-│   │   ├── validate.middleware.js
-│   ├── models/          # Database models (User, etc.)
-│   │   ├── user.model.js
-│   ├── routes/          # API endpoints
-│   │   ├── auth.routes.js
-│   ├── services/        # Handles complex business logic (DB queries, hashing, JWT, etc.)
-│   │   ├── auth.service.js
-│   ├── utils/           # Utility functions (password hashing, token generation, etc.)
-│   │   ├── password.util.js
-│   │   ├── jwt.util.js
-│   ├── app.js           # Express app setup
-│   ├── server.js        # Entry point for starting the server
-│── .env                 # Environment variables (DB credentials, JWT secret, etc.)
-│── package.json         # Project dependencies and scripts
-│── README.md            # Project documentation
-📌 What Goes Where?
-Folder/File	Purpose
-config/	Stores configuration files like database connection and environment settings.
-controllers/	Contains functions that handle HTTP requests and responses (e.g., user registration).
-middlewares/	Middleware functions for request validation, authentication, etc.
-models/	Defines database models/tables (e.g., User model for MySQL).
-routes/	Defines API endpoints (e.g., POST /api/auth/register).
-services/	Handles business logic like querying MySQL, hashing passwords, generating tokens.
-utils/	Utility functions such as password hashing, JWT token generation.
-app.js	Main Express.js app configuration (middleware, routes).
-server.js	Starts the server and listens on a port.
-.env	Stores environment variables like DB_HOST, DB_USER, DB_PASSWORD.
-🛠️ Next Steps
-Initialize the Node.js Project
+│
+├── config/                     # Configuration files (DB, environment, third-party services)
+│   ├── db.js                   # Database connection config
+│   ├── nodemailer.js           # Nodemailer setup
+│   └── env.js                  # Environment variables config
+│
+├── controllers/                # Route controllers (handle requests)
+│   ├── authController.js       # Auth-related APIs (login, register, forgot password)
+│   ├── policyController.js     # Policy-related APIs
+│   ├── claimsController.js     # Claims-related APIs
+│   └── ordersController.js     # Orders-related APIs
+│
+├── services/                   # Business logic (service layer)
+│   ├── authService.js          # Auth-related logic
+│   ├── policyService.js        # Policy-related logic
+│   ├── claimsService.js        # Claims-related logic
+│   └── ordersService.js        # Orders-related logic
+│
+├── repositories/               # Database interaction (SQL queries or ORM models)
+│   ├── userRepository.js       # User DB interactions
+│   ├── policyRepository.js     # Policy DB interactions
+│   ├── claimsRepository.js     # Claims DB interactions
+│   └── ordersRepository.js     # Orders DB interactions
+│
+├── models/                     # Sequelize models or database schemas
+│   ├── User.js                 # User model
+│   ├── Policy.js               # Policy model
+│   ├── Claim.js                # Claim model
+│   └── Order.js                # Order model
+│
+├── middlewares/                # Express middlewares
+│   ├── authMiddleware.js       # JWT auth validation
+│   ├── validationMiddleware.js # Request validation middleware
+│   ├── errorMiddleware.js      # Global error handler
+│   └── rateLimiter.js          # API rate limiting
+│
+├── routes/                     # API route definitions
+│   ├── authRoutes.js           # Auth routes
+│   ├── policyRoutes.js         # Policy routes
+│   ├── claimsRoutes.js         # Claims routes
+│   └── ordersRoutes.js         # Orders routes
+│
+├── utils/                      # Utility functions/helpers
+│   ├── generateToken.js        # JWT token generator
+│   ├── sendEmail.js            # Email sender function
+│   └── logger.js               # Winston logger config
+│
+├── .env                        # Environment variables
+├── app.js                      # Express app setup
+├── server.js                   # Server entry point
+└── package.json                # Node.js dependencies
 
-bash
-Copy
-Edit
-mkdir insureease-auth-service && cd insureease-auth-service
-npm init -y
-Install Core Dependencies
+## Authentication APIs (Node.js)
+- **POST /api/auth/register** — Register a new user.
+- **POST /api/auth/login** — User login.
+- **POST /api/auth/forgot-password** — Request password reset with OTP.
+- **POST /api/auth/reset-password** — Reset password with OTP.
+- **GET /api/auth/me** — Get current user’s profile.
+- **PUT /api/auth/update-profile** — Update user’s profile.
+- **PUT /api/auth/change-password** — Change user password.
 
-bash
-Copy
-Edit
-npm install express dotenv mysql2 cors helmet morgan bcryptjs jsonwebtoken joi
-express → Web framework.
-dotenv → Loads environment variables.
-mysql2 → MySQL database driver.
-cors → Handles cross-origin requests.
-helmet → Secures HTTP headers.
-morgan → Logs HTTP requests.
-bcryptjs → Hashes passwords.
-jsonwebtoken → Creates & verifies JWT tokens.
-joi → Validates input data.
- Setting Up MySQL Connection (Industry-Level)
-Since you're using MySQL, we’ll create a proper database connection management system to: ✔ Use connection pooling for better performance.
-✔ Load credentials from .env to keep them secure.
-✔ Handle errors gracefully to prevent crashes.
+## Admin APIs (Node.js)
+- **GET /api/admin/users** — Get list of all users.
+- **GET /api/admin/user/:id** — Get details of a specific user.
+- **PUT /api/admin/user/:id** — Update user details.
+- **DELETE /api/admin/user/:id** — Delete a user.
 
-📁 Folder Structure Update
-graphql
-Copy
-Edit
-src/
-│── config/
-│   ├── db.js        # MySQL Database Connection (Connection Pool)
-│   ├── env.js       # Loads environment variables
-Step 1: Setup Environment Variables (.env)
-env
-Copy
-Edit
-PORT=5000
+## Policy APIs (Node.js)
+- **GET /api/policies** — Get list of all policies.
+- **GET /api/policies/:id** — Get details of a specific policy.
+- **POST /api/policies** — Add a new policy (admin only).
+- **PUT /api/policies/:id** — Update policy details (admin only).
+- **DELETE /api/policies/:id** — Delete a policy (admin only).
 
-# MySQL Database Credentials
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=yourpassword
-DB_NAME=insureease
-DB_PORT=3306
-Step 2: Create Database Connection (src/config/db.js)
-js
-Copy
-Edit
-const mysql = require("mysql2");
-const dotenv = require("dotenv");
+## User Policy APIs (Node.js)
+- **GET /api/user-policies** — Get policies purchased by the current user.
+- **POST /api/user-policies** — Purchase a policy.
+- **GET /api/user-policies/:id** — Get details of a specific purchased policy.
+- **PUT /api/user-policies/:id** — Update purchased policy details (like nominee, etc.).
+- **DELETE /api/user-policies/:id** — Cancel a purchased policy.
 
-dotenv.config();
+## Claims APIs (Node.js)
+- **GET /api/claims** — Get claims made by the current user.
+- **POST /api/claims** — File a new claim.
+- **GET /api/claims/:id** — Get details of a specific claim.
+- **PUT /api/claims/:id** — Update claim details.
+- **DELETE /api/claims/:id** — Withdraw a claim.
 
-// Create a MySQL connection pool (better than single connection)
-const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT,
-  waitForConnections: true,
-  connectionLimit: 10, // Adjust based on traffic
-  queueLimit: 0,
-});
+## Admin Claims Management APIs (Node.js)
+- **GET /api/admin/claims** — Get all claims.
+- **GET /api/admin/claims/:id** — Get details of a specific claim.
+- **PUT /api/admin/claims/:id/approve** — Approve a claim.
+- **PUT /api/admin/claims/:id/reject** — Reject a claim.
 
-// Promisify queries for cleaner async/await usage
-const db = pool.promise();
+## Orders APIs (Node.js)
+- **GET /api/orders** — Get orders made by the current user.
+- **POST /api/orders** — Create a new order.
+- **GET /api/orders/:id** — Get details of a specific order.
 
-module.exports = db;
-🔹 Why use connection pooling?
-Instead of opening and closing new database connections for every request, pooling reuses connections, reducing overhead.
+## Admin Orders Management APIs (Node.js)
+- **GET /api/admin/orders** — Get all orders.
+- **GET /api/admin/orders/:id** — Get details of a specific order.
+- **PUT /api/admin/orders/:id/status** — Update order status.
 
-🔹 Why use db.promise()?
-It enables async/await usage, making code cleaner.
+## Payment APIs (Node.js)
+- **POST /api/payments/checkout** — Create a payment session (Stripe).
+- **POST /api/payments/confirm** — Confirm a successful payment.
 
-Step 3: Load Environment Variables (src/config/env.js)
-js
-Copy
-Edit
-const dotenv = require("dotenv");
+## Dashboard APIs (Node.js)
+- **GET /api/dashboard/summary** — Get user dashboard data (policies, claims, orders overview).
+- **GET /api/admin/dashboard/summary** — Get admin dashboard data (users, policies, claims, orders overview).
 
-// Load environment variables from .env file
-dotenv.config();
+High-Level Flow of the Backend:
 
-module.exports = {
-  port: process.env.PORT || 5000,
-  db: {
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT || 3306,
-  },
-  jwt: {
-    secret: process.env.JWT_SECRET || "your_secret_key",
-    expiresIn: process.env.TOKEN_EXPIRY || "1d",
-  },
-};
-Step 4: Integrate DB Connection in Express (src/app.js)
-js
-Copy
-Edit
-const express = require("express");
-const cors = require("cors");
-const helmet = require("helmet");
-const morgan = require("morgan");
-const dotenv = require("dotenv");
-const db = require("./config/db"); // Import MySQL connection
+Request hits the route:
+A client (like the frontend) sends an HTTP request to an endpoint — for example, a request to log in or create a policy.
 
-dotenv.config();
-const app = express();
+Routes handle incoming requests:
+Routes define the API endpoints and decide which controller function should handle the request.
 
-// Middleware
-app.use(cors());
-app.use(helmet());
-app.use(morgan("dev"));
-app.use(express.json());
+Folder: routes
+Files: authRoutes.js, claimsRoutes.js, ordersRoutes.js, policyRoutes.js, userPolicyRoutes.js
+Middleware processes the request (if needed):
+Middleware sits between the route and the controller — it checks if the user is authenticated, validates input, ensures rate limiting, and so on.
 
-// Test Database Connection
-db.query("SELECT 1")
-  .then(() => console.log("✅ MySQL Database Connected"))
-  .catch((err) => console.error("❌ MySQL Connection Error:", err));
+Folder: middlewares
+Files: authMiddleware.js, adminMiddleware.js, validateRequest.js, rateLimiter.js, errorMiddleware.js, uploadMiddleware.js
+Controllers handle the business logic:
+Controllers take the incoming request, extract the data, and decide what needs to happen. They call the appropriate service functions and return a response.
 
-module.exports = app;
-Step 5: Run & Test the MySQL Connection
-bash
-Copy
-Edit
-node src/server.js
-If the setup is correct, you should see:
+Folder: controllers
+Files: authController.js, claimsController.js, ordersController.js, policyController.js, userPolicyController.js
+Services handle the actual logic and computations:
+Services are where the main business logic happens — like verifying user credentials, calculating policy prices, or processing claims.
 
-pgsql
-Copy
-Edit
-✅ MySQL Database Connected
-Server running on port 5000
+Folder: services
+Files: authService.js, claimsService.js, orderService.js, policyService.js, userPolicyService.js
+Repositories interact with the database:
+Repositories handle all the database queries and interactions using Sequelize. They abstract away the direct DB operations from the business logic.
+
+Folder: repositories
+Files: userRepository.js, claimRepository.js, ordersRepository.js, policyRepository.js, userPolicyRepository.js
+Models define the database structure:
+Sequelize models map the database tables and their relationships into JavaScript objects — for users, policies, orders, claims, and user policies.
+
+Folder: models
+Files: User.js, Policy.js, Order.js, Claim.js, UserPolicy.js, associations.js
+Config handles environment and third-party settings:
+Centralized configuration for DB connections, environment variables, email settings, OAuth, and JWT.
+
+Folder: config
+Files: db.js, env.js, nodeMailer.js, passport.js
+Example Flow (Login API):
+
+POST /api/auth/login — hits authRoutes.js
+authRoutes.js calls authController.login
+authController.js calls authService.login
+authService.js calls userRepository.findByEmail
+userRepository.js queries the database using Sequelize
+Response flows back: service → controller → route → client
+Purpose of Each Folder:
+
+routes: Defines API endpoints and maps them to controller functions.
+controllers: Handles request data, calls service functions, and sends responses.
+services: Contains the business logic, calculations, and decisions.
+repositories: Abstracts database operations using Sequelize ORM.
+models: Defines the database structure and relationships.
+middlewares: Handles authentication, validation, error handling, rate limiting, etc.
+config: Centralized configuration for DB, environment variables, and third-party services.

@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { useSelector } from "react-redux"; // Import Redux state selector
+import { useDispatch, useSelector } from "react-redux"; // Import Redux state selector
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -45,10 +45,16 @@ import OrderDetails from "./components/admin/OrderDetails";
 import AddPolicy from "./components/admin/AddPolicy";
 import EditPolicy from "./components/admin/EditPolicy";
 import ClaimDetails from "./pages/user/ClaimDetails";
+import { useEffect } from "react";
+import { checkAuth } from "./slices/authSlice";
 
 const App = () => {
   // Get authentication & role from Redux state
   const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const dispatch=useDispatch();
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
 
   return (
     <div className="container">

@@ -1,169 +1,109 @@
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import { updateUserProfileSuccess } from "../../slices/authSlice";
-
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import profile from '../../assets/images/profile.avif';
 const Profile = () => {
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user);
+  const { user } = useSelector((state) => state.auth);
 
+  const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({ ...user });
-  const [editing, setEditing] = useState(false);
-  const [passwords, setPasswords] = useState({
-    oldPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
+  const [preview, setPreview] = useState(user.profilePicture);
 
-  const handleEditToggle = () => setEditing(!editing);
-
-  const handleInputChange = (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSave = () => {
-    if (!formData.firstName || !formData.lastName || !formData.phone || !formData.address.street) {
-      toast.error("All fields must be filled!");
-      return;
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({ ...formData, profilePicture: file });
+      setPreview(URL.createObjectURL(file));
     }
-
-    if (!/^\d{3}-\d{3}-\d{4}$/.test(formData.phone)) {
-      toast.error("Phone number must be in format XXX-XXX-XXXX");
-      return;
-    }
-
-    dispatch(updateUserProfileSuccess(formData));
-    toast.success("Profile updated successfully!");
-    setEditing(false);
   };
 
-  const handlePasswordUpdate = () => {
-    const { oldPassword, newPassword, confirmPassword } = passwords;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const updatedData = new FormData();
 
-    if (!oldPassword || !newPassword || !confirmPassword) {
-      toast.error("Please fill in all password fields!");
-      return;
+    for (let key in formData) {
+      updatedData.append(key, formData[key]);
     }
 
-    if (newPassword.length < 6) {
-      toast.error("New password must be at least 6 characters!");
-      return;
+    try {
+      // await dispatch(updateUser(updatedData)).unwrap();
+      toast.success('Profile updated successfully!');
+      setEditMode(false);
+    } catch (error) {
+      toast.error(error.message || 'Failed to update profile');
     }
-
-    if (newPassword !== confirmPassword) {
-      toast.error("Passwords do not match!");
-      return;
-    }
-
-    toast.success("Password updated successfully!");
-    setPasswords({ oldPassword: "", newPassword: "", confirmPassword: "" });
   };
 
   return (
-    <div className="container mt-4">
-      <h2>Profile</h2>
-      <div className="card p-3">
-        <div className="text-center">
-          <img
-            src={user.profilePicture}
-            alt="Profile"
-            className="rounded-circle"
-            width="120"
+    <div className="container mt-5">
+      <h2 className="text-center mb-4">My Profile</h2>
+
+      <div className="text-center mb-4">
+        <img
+          src="http://localhost:5000/uploads/profile-pictures/1740510126639.jpg"
+          // {preview ? `${import.meta.env.VITE_SERVER_URL}/${preview}` : profile}
+          alt="Profile"
+          className="rounded-circle border border-primary" 
+          style={{ width: '150px', height: '150px', objectFit: 'cover' }}
+        />
+        {editMode && (
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="form-control mt-3"
           />
-          <div>
-            <button className="btn btn-primary mt-2">Change Picture</button>
+        )}
+      </div>
+
+      <form onSubmit={handleSubmit} className="row g-3">
+        {['firstName', 'lastName', 'email', 'phone', 'dob', 'gender', 'address', 'city', 'state', 'country', 'pincode'].map((field) => (
+          <div className="col-md-6" key={field}>
+            <label htmlFor={field} className="form-label text-capitalize">{field}</label>
+            <input
+              type="text"
+              name={field}
+              value={formData[field] || ''}
+              onChange={handleChange}
+              disabled={!editMode}
+              className={`form-control ${!editMode ? 'bg-light' : ''}`}
+            />
           </div>
-        </div>
+        ))}
 
-        <div className="mt-3">
-          <label>First Name</label>
-          <input
-            type="text"
-            className="form-control"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleInputChange}
-            disabled={!editing}
-          />
-
-          <label>Last Name</label>
-          <input
-            type="text"
-            className="form-control"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleInputChange}
-            disabled={!editing}
-          />
-
-          <label>Email</label>
-          <input type="email" className="form-control" value={user.email} disabled />
-
-          <label>Phone</label>
-          <input
-            type="text"
-            className="form-control"
-            name="phone"
-            value={formData.phone}
-            onChange={handleInputChange}
-            disabled={!editing}
-          />
-
-          <label>Address</label>
-          <input
-            type="text"
-            className="form-control"
-            name="address"
-            value={formData.address.street}
-            onChange={handleInputChange}
-            disabled={!editing}
-          />
-        </div>
-
-        <div className="mt-3">
-          {editing ? (
-            <button className="btn btn-success" onClick={handleSave}>
-              Save
-            </button>
+        <div className="d-flex justify-content-center gap-3 mt-4">
+          {editMode ? (
+            <>
+              <button
+                type="button"
+                onClick={() => setEditMode(false)}
+                className="btn btn-secondary"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="btn btn-primary"
+              >
+                Save Changes
+              </button>
+            </>
           ) : (
-            <button className="btn btn-warning" onClick={handleEditToggle}>
-              Edit
+            <button
+              type="button"
+              onClick={() => setEditMode(true)}
+              className="btn btn-success"
+            >
+              Edit Profile
             </button>
           )}
         </div>
-      </div>
-
-      <div className="card p-3 mt-4">
-        <h5>Change Password</h5>
-        <input
-          type="password"
-          className="form-control"
-          name="oldPassword"
-          placeholder="Old Password"
-          value={passwords.oldPassword}
-          onChange={(e) => setPasswords({ ...passwords, oldPassword: e.target.value })}
-        />
-        <input
-          type="password"
-          className="form-control mt-2"
-          name="newPassword"
-          placeholder="New Password"
-          value={passwords.newPassword}
-          onChange={(e) => setPasswords({ ...passwords, newPassword: e.target.value })}
-        />
-        <input
-          type="password"
-          className="form-control mt-2"
-          name="confirmPassword"
-          placeholder="Confirm New Password"
-          value={passwords.confirmPassword}
-          onChange={(e) => setPasswords({ ...passwords, confirmPassword: e.target.value })}
-        />
-        <button className="btn btn-primary mt-2" onClick={handlePasswordUpdate}>
-          Update Password
-        </button>
-      </div>
+      </form>
     </div>
   );
 };
